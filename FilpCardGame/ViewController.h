@@ -9,6 +9,7 @@
 
 @interface ViewController : UIViewController
 
+- (IBAction)FilpCardBtn:(UIButton *)sender;
 
 @end
 
