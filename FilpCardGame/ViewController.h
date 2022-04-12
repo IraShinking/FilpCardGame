@@ -9,7 +9,7 @@
 
 @interface ViewController : UIViewController
 
-- (IBAction)FilpCardBtn:(UIButton *)sender;
-
+-(IBAction)touchCardButtons:(UIButton *)sender;
+-(IBAction)switchGameType:(UISegmentedControl *)sender;
 @end
 

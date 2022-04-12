@@ -16,6 +16,7 @@
     
     if(self)
     {
+        //生成一整幅牌并且加入到牌堆里面
         for(NSString *suit in [PlayingCard vaildSuit])
         {
             for(NSUInteger rank=1; rank<=[PlayingCard maxRank];rank++)

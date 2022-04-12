@@ -9,7 +9,9 @@
 
 @implementation PlayingCard
 
-@synthesize suit=_suit;//because we provide setter and getter using the "_suit" in it but not "suit"
+//@synthesize suit=_suit;//because we provide setter and getter using the "_suit" in it but not "suit"
+@synthesize suit;
+@synthesize rank;
 
 -(NSString *)contents
 {
@@ -34,11 +36,11 @@
 }
 
 
--(void)setSuit:(NSString *)suit
+-(void)setSuit:(NSString *)theSuit
 {
-    if([[PlayingCard vaildSuit] containsObject:suit])
+    if([[PlayingCard vaildSuit] containsObject:theSuit])
     {
-        _suit=suit;
+        suit=theSuit;
     }
 }
 
@@ -47,14 +49,14 @@
     //if _suit != nil
     //return _suit
     //else return @"?"
-    return _suit? _suit:@"?";
+    return suit? suit:@"?";
 }
 
--(void)setRank:(NSUInteger)rank
+-(void)setRank:(NSUInteger)theRank
 {
     if(rank<=[PlayingCard maxRank])
     {
-        _rank=rank;
+        rank=theRank;
     }
 }
 @end

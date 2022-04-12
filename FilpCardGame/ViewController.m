@@ -8,44 +8,88 @@
 #import "ViewController.h"
 #import "PlayingCard.h"
 #import "PlayingCardDeck.h"
+#import "PlayingCardGame.h"
 
 @interface ViewController ()
 
-@property (weak, nonatomic) IBOutlet UILabel *FilpTimes;
-@property(nonatomic) NSUInteger filpCounts;
+
 @property(nonatomic)PlayingCardDeck *deck;
-@property(nonatomic)Card *card;
+@property(nonatomic)PlayingCardGame *game;//cardGame
+
+@property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
+
+@property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
 
 @end
 
 @implementation ViewController
 
--(void)setFilpCounts:(NSUInteger)filpCounts
+@synthesize deck;
+@synthesize game;
+@synthesize cardButtons;
+@synthesize scoreLabel;
+
+
+
+-(PlayingCardDeck *)deck
 {
-    _filpCounts=filpCounts;
+    if(!deck)
+    {
+        deck=[[PlayingCardDeck alloc] init];
+    }
+    return deck;
+}
+
+-(PlayingCardGame *)game
+{
+    if(!game)
+    {
+        //生成game 完成发牌
+        game=[[PlayingCardGame alloc] initWithCount:[cardButtons count] andDeck:self.deck];
+    }
+
+    return game;
+}
+
+-(IBAction)touchCardButtons:(UIButton *)sender
+{
+    NSUInteger cardIndex=[self.cardButtons indexOfObject:sender];
+    [self.game matchingCardAtIndex:cardIndex];
+    [self updateUI];
+}
+
+-(void)updateUI
+{
+    for(UIButton *button in self.cardButtons)
+    {
+        NSUInteger cardIndex = [self.cardButtons indexOfObject:button];
+        Card *card=[game cardAtIndex:cardIndex];
+        [button setTitle:[self titleForCard:card] forState:UIControlStateNormal];
+        
+        button.enabled=!card.isMatched;//if the card is matched, disable the button
+    }
     
-    [self.FilpTimes setText:[NSString stringWithFormat:@"FilpTimes: %lu",self.filpCounts]];
-    
+    [scoreLabel setText:[NSString stringWithFormat:@"Score: %ld",self.game.score]];
+}
+
+-(NSString *)titleForCard:(Card *)card
+{
+    return card.isChosen ? card.contents : @"The Back" ;
+}
+
+-(IBAction)switchGameType:(UISegmentedControl *)sender
+{
+    //reset game to change;
+    NSInteger index=sender.selectedSegmentIndex;
+    if(index==0)
+    {
+        NSLog(@"Matching two card");
+    }
+    else if(index==1)
+    {
+        NSLog(@"Matching three card");
+    }
 }
 
 
-- (IBAction)FilpCardBtn:(UIButton *)sender {
-    if([sender.currentTitle isEqualToString:@"The Back"])
-    {
-       if(_deck==nil)
-       {
-           _deck=[[PlayingCardDeck alloc]init];
-       }
-        
-        _card=[_deck drawRandomCard];
-        [sender setTitle:_card.contents forState:UIControlStateNormal];
-    }
-    else
-    {
-        [sender setTitle:@"The Back" forState:UIControlStateNormal];
-        
-    }
-    self.filpCounts++;
-    
-}
 @end

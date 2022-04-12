@@ -15,13 +15,15 @@
 
 @implementation Deck
 
+@synthesize cards;
+
 -(NSMutableArray *)cards
 {
-    if(!_cards)//check it in getter
+    if(!cards)//check it in getter
     {
-        _cards=[[NSMutableArray alloc]init];
+        cards=[[NSMutableArray alloc]init];
     }
-    return _cards;
+    return cards;
 }
 -(void)addCard:(Card *)card atTop:(BOOL)atTop
 {

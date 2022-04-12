@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E13B7AF927FFC91100684B1B /* PlayingCardGame.m in Sources */ = {isa = PBXBuildFile; fileRef = E13B7AF827FFC91100684B1B /* PlayingCardGame.m */; };
 		E1CD5A6827F1F699002AF8C0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E1CD5A6727F1F699002AF8C0 /* AppDelegate.m */; };
 		E1CD5A6B27F1F699002AF8C0 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E1CD5A6A27F1F699002AF8C0 /* SceneDelegate.m */; };
 		E1CD5A6E27F1F699002AF8C0 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E1CD5A6D27F1F699002AF8C0 /* ViewController.m */; };
@@ -41,6 +42,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		E13B7AF727FFC91100684B1B /* PlayingCardGame.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlayingCardGame.h; sourceTree = "<group>"; };
+		E13B7AF827FFC91100684B1B /* PlayingCardGame.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlayingCardGame.m; sourceTree = "<group>"; };
 		E1CD5A6327F1F699002AF8C0 /* FilpCardGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FilpCardGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1CD5A6627F1F699002AF8C0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		E1CD5A6727F1F699002AF8C0 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -168,6 +171,8 @@
 				E1CD5A9D27F30F1A002AF8C0 /* Deck.m */,
 				E1CD5AA327F30F1A002AF8C0 /* PlayingCard.h */,
 				E1CD5AA027F30F1A002AF8C0 /* PlayingCard.m */,
+				E13B7AF727FFC91100684B1B /* PlayingCardGame.h */,
+				E13B7AF827FFC91100684B1B /* PlayingCardGame.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -309,6 +314,7 @@
 				E1CD5A6827F1F699002AF8C0 /* AppDelegate.m in Sources */,
 				E1CD5A7927F1F69C002AF8C0 /* main.m in Sources */,
 				E1CD5AA527F30F1A002AF8C0 /* Deck.m in Sources */,
+				E13B7AF927FFC91100684B1B /* PlayingCardGame.m in Sources */,
 				E1CD5A6B27F1F699002AF8C0 /* SceneDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
