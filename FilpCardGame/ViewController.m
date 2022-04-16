@@ -20,6 +20,7 @@
 
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
 
+
 @end
 
 @implementation ViewController
@@ -83,12 +84,28 @@
     NSInteger index=sender.selectedSegmentIndex;
     if(index==0)
     {
+        [self.game reset];
+        [self updateUI];
         NSLog(@"Matching two card");
+        [self.game setMatchTwoCard:YES];//remember to use getter, for lazy initalization
+        
     }
     else if(index==1)
     {
+        [self.game reset];
+        [self updateUI];
         NSLog(@"Matching three card");
+        [self.game setMatchTwoCard:NO];
+        
+        
     }
+}
+
+- (IBAction)resetButton:(UIButton *)sender {
+    
+    NSLog(@"reset button is pressed");
+    [self.game reset];
+    [self updateUI];
 }
 
 

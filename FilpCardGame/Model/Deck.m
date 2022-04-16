@@ -39,7 +39,11 @@
 
 -(void)addCard:(Card *)card
 {
-    [self addCard:card atTop:NO];
+    if([self.cards indexOfObject:card]==NSNotFound)//如果不允许牌堆里有重复的牌
+    {
+        [self addCard:card atTop:NO];
+    }
+    
 }
 
 -(Card *)drawRandomCard
@@ -57,4 +61,8 @@
     return randomCard;
 }
 
+-(NSUInteger)cardsCount
+{
+    return [self.cards count];
+}
 @end

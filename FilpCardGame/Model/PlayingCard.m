@@ -59,5 +59,10 @@
         rank=theRank;
     }
 }
+
+-(NSString *)description
+{
+    return [self contents];
+}
 @end
 

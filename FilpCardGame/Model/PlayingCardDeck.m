@@ -32,4 +32,19 @@
     return self;
 }
 
+-(void)resetDeck
+{
+    //生成一整幅牌并且加入到牌堆里面
+    for(NSString *suit in [PlayingCard vaildSuit])
+    {
+        for(NSUInteger rank=1; rank<=[PlayingCard maxRank];rank++)
+        {
+            PlayingCard *card=[[PlayingCard alloc]init];
+            card.rank=rank;
+            card.suit=suit;
+            [self addCard:card];
+        }
+    }
+}
+
 @end

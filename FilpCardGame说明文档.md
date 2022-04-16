@@ -65,7 +65,7 @@
 
 - [x] 游戏开始时：显示一堆牌，牌面朝下。点击的时候牌面翻转向上，显示出牌的内容。
 
-- [ ] 可以选择匹配两张或三张牌。
+- [x] 可以选择匹配两张或三张牌。
 
 - [x] 依次点击想要匹配的牌，如果这几张牌之间匹配，会一直牌面朝上，而且按钮禁用。
 
@@ -132,7 +132,7 @@
    - 现在
      - 卡牌在开始游戏之后就已经是固定的了。开始游戏的时候会自动发牌，发到的牌在这一局内固定，不会再变化。
        - [x] 这部分工作由 `PlayingCardGame` 完成
-       - [ ] 是否需要重设？重新来一局？然后初始化重新发牌？
+       - [x] 是否需要重设？重新来一局？然后初始化重新发牌？
      - 在View里面设立一堆按钮，绑定到Controller里面的按钮组，再将这些按钮全部逐个绑定到响应方法上面。
      - 通过点击按钮， 激活这个响应方法的时候，将`sender` 传入按钮的数组，用`indexOfObject` 方法找到它所对应的下标，然后传入下标进game，让game来处理这张牌。
        - 翻面……匹配……选中状态……其实都交给了`PlayingCardGame` 来处理（面向对象的魔力，大家各司其职）
@@ -158,7 +158,6 @@
 
 
 
-
 ***Syntax Sugar：***
 
 - 如果用了`@synthesized` 而且自己重载getter，编译器会报错。
@@ -169,6 +168,87 @@
 - 使用 `[array indexOfObject:index]` 在数组里面查找元素，实际上是调用内置的`isEqual` 方法
   - 没有重载`isEqual` 方法的时候，比较的是两个对象的内存地址，如果要比较内容是否相同（两个`NSString` 对象或其他`NSObject` 对象 ），要自己重载方法。
   - 所以这个方法在没有重载`isEqual`方法的时候，只对本来就被编入到`NSArray` 的对象有效
+- 使用 `[array indexOfObject:index]` 在数组里面查找元素时，如果元素不存在，返回的是 `NSNotFound`
+
+
+
+##### 实现三张卡牌匹配：
+
+1. 逻辑设计
+
+   三张牌的匹配比两张牌的要复杂，三张牌需要两两之间相互匹配，才能够算是匹配，所以至少需要在两张牌的判定逻辑上增加两个变量：一个是对上一次匹配的状态的存储变量`NSString *matchingType`，一个是存储上一次匹配的牌的数组`NSMutableArray *cardsMatched`。
+
+   在成功匹配的时候，要检查匹配的模式，修改匹配的这些牌的状态。
+
+   具体逻辑如下：
+
+   ​	***遍历检查：当前的牌和已选中的牌是否匹配？***
+
+   - match in suit 两张牌有相同花色
+     - first time 先前没有牌匹配过。
+       - ***满足此情况的条件***：`cardsMatched` 数组为空，并且`matchingType=@""`
+       - ***执行操作***：将此次匹配的两张牌加入到`cardsMatched` 数组，`matchingType=@"suitMatched"`
+     - second time 先前有牌匹配过，而且匹配的类型和此次匹配一样
+       - ***满足此情况的条件***：`cardsMatched` 数组里已经有两张卡牌，并且`matchingType=@"suitMatched"`，并且`cardsMatched` 数组里没有当前这张牌
+       - ***执行操作***：将这张牌加入到`cardsMatched`数组里面，然后执行`[self allCardsMatched]`，对三张相互匹配的牌进行一些操作，并且增加得分`score`。
+     - 和先前记录的匹配类型不符合
+       - ***满足此情况的条件***：这两张牌相匹配，但是和之前匹配的两张牌类型不同，比如先前的类型是 `matchingType=@"rankMatched"`，而现在是match in suit，自然不吻合
+       - ***执行操作***：调用`[self cleanCardsMatched]`清理`cardsMatched`数组，和`matchingType`；并且将现在匹配的这两张牌加入到`cardsMatched`里面，且`matchingType=@"suitMatched"`
+   - match in rank 两张牌有相同数字（同上）
+   - not match 两张牌不匹配
+     - 将当前的牌设置为选中 
+     - 调用`[self cleanCardsMatched]`清理`cardsMatched`数组，和`matchingType`
+
+   
+
+   
+
+2. 细节修改
+
+   1. 在`Deck` 里增加了 `(NSUInteger)cardsCount` 返回牌堆里剩下的牌数。
+
+   2. 在`PlayingCardGame` 里
+
+      1. 增加一个`BOOL`变量：`matchTwoCard`，用于标识当前游戏的状态，是匹配两张卡牌还是三张卡牌，初始化时设置成`YES`，表示初始是匹配两张卡牌。
+      2. 增加一个`reset` 方法：用来对游戏进行重新加载，比如重新发牌，重新设置分数，清空当前卡牌的匹配类型；重新发牌前会检查牌堆的数目，如果不够牌了，生成一个新的牌堆
+         - *注意内存管理问题*：是否应该在这里生成一个新牌堆？
+         - 改成给从Controller里获取来的牌堆`deck`发送信息，让它自己重设。
+           - 在`PlayingCardDeck`增加一个`resetDeck`方法，重新生成 一幅牌加入到牌堆里面。根据数据封装原则，牌堆里记录卡牌的数组`cards`是属于`Deck`的私有变量，`PlayingCardDeck`作为一个子类是无法访问的，没有办法清空这个数组，<u>只能在`Deck`的`addCard`里增加一个添加卡牌时的判断：判断卡牌是否存在，如果存在就不加入到牌堆中。</u>**如果新版本允许相同的两张牌存在，可以省略这一判断。**
+           - 而且根据OC的特性，要在`PlayingCardGame`所有涉及这个变量的地方，将类型从`Deck` 改为`PlayingCardDeck`
+      3. 在`matchingCardAtIndex:`里增加判定，判定是匹配两张卡还是三张卡，走不同的判定逻辑。
+      4. 新增`allCardsMatched`方法：对`cardsMatched`数组里面的卡牌，设置为`matched=YES`,`chosen=YES`，然后清空这个数组，将`matchingType`也清空
+      5. 新增`cleanCardsMatched`方法：对`cardsMatched`数组里面的卡牌，设置为`matched=NO`,`chosen=NO`，然后清空这个数组，将`matchingType`也清空
+
+   3. 在界面的修改
+
+      1. 增加了二选一按钮（Segmented Control），用以选择匹配两张牌还是三张牌
+      2. 增加了重新加载游戏的按钮
+
+   4. 在ViewController的修改
+
+      1. 针对二选一按钮
+
+         获取当前值（使用`sender.selectedSegmentIndex`），判定并且：
+
+         1. 重设游戏：` [self.game reset]`
+         2. 更新UI：` [self updateUI]`
+         3. 设置游戏类型： `[self.game setMatchTwoCard:YES]` 或`[self.game setMatchTwoCard:NO]`
+
+      2. 针对重新加载按钮：
+
+         调用`[self.game reset]`和`[self updateUI]`，重新设定游戏并且更新UI
+
+3. 相比上一次修改完善的功能
+
+   1. 可以选择匹配两张或三张牌。
+   2. 可以重设，初始化重新发牌，重新来一局。
+
+4. 一些还没有实现的功能
+
+   - [ ] 用Label显示匹配成功的提示
+   - [ ] 检查所有卡牌，如果卡牌无法再匹配，显示游戏结束和得分
+
+
 
 
 

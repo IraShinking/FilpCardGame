@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PlayingCardGame : NSObject
 
-
+@property(nonatomic) BOOL matchTwoCard;//control the game is matching two card or three card
 @property(nonatomic,readonly) NSInteger score;//can only be read by public
 
 -(instancetype)initWithCount:(NSUInteger)count
@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)matchingCardAtIndex:(NSUInteger)index;
 -(PlayingCard *)cardAtIndex:(NSUInteger)index;
+-(void)reset;//reset the game
 @end
 
 NS_ASSUME_NONNULL_END

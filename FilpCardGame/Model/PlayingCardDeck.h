@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PlayingCardDeck : Deck
 
+-(void)resetDeck;//重新生成牌堆
+
 @end
 
 NS_ASSUME_NONNULL_END
